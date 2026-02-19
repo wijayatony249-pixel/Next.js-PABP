@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import styles from "./product-grid.module.css";
 
@@ -95,11 +96,12 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
       <div className={styles.grid}>
         {displayedProducts.map((item) => (
           <article key={item.id} className={styles.card}>
-            <img
+            <Image
+              className={styles.thumb}
               src={item.thumbnail}
               alt={item.title}
-              className={styles.thumb}
-              loading="lazy"
+              width={320}
+              height={180}
             />
             <div className={styles.cardBody}>
               <h2>{item.title}</h2>
