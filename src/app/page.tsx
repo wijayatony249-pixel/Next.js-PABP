@@ -7,6 +7,7 @@ type Product = {
   title: string;
   description: string;
   price: number;
+  discountPercentage: number;
   rating: number;
   category: string;
   thumbnail: string;

@@ -9,6 +9,7 @@ type Product = {
   title: string;
   description: string;
   price: number;
+  discountPercentage: number;
   rating: number;
   category: string;
   thumbnail: string;
@@ -26,6 +27,9 @@ const formatRupiah = (usdPrice: number) =>
     currency: "IDR",
     maximumFractionDigits: 0,
   }).format(usdPrice * USD_TO_IDR_RATE);
+
+const hitungHargaDiskon = (item: Product) =>
+  item.price * (1 - item.discountPercentage / 100);
 
 const formatLabelKategori = (value: string) => {
   if (value === "semua") {
@@ -121,11 +125,15 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
     });
 
     if (sortBy === "harga-naik") {
-      result = [...result].sort((a, b) => a.price - b.price);
+      result = [...result].sort(
+        (a, b) => hitungHargaDiskon(a) - hitungHargaDiskon(b),
+      );
     }
 
     if (sortBy === "harga-turun") {
-      result = [...result].sort((a, b) => b.price - a.price);
+      result = [...result].sort(
+        (a, b) => hitungHargaDiskon(b) - hitungHargaDiskon(a),
+      );
     }
 
     if (sortBy === "rating-tertinggi") {
@@ -141,7 +149,7 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
   );
 
   const totalBelanja = useMemo(
-    () => selectedProducts.reduce((sum, item) => sum + item.price, 0),
+    () => selectedProducts.reduce((sum, item) => sum + hitungHargaDiskon(item), 0),
     [selectedProducts],
   );
 
@@ -257,9 +265,19 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
               <h2>{item.title}</h2>
               <p>{item.translatedDescription}</p>
               <div className={styles.meta}>
-                <span>{formatRupiah(item.price)}</span>
+                <span className={styles.priceBlock}>
+                  <span className={styles.priceAfterDiscount}>
+                    {formatRupiah(hitungHargaDiskon(item))}
+                  </span>
+                  <span className={styles.priceOriginal}>
+                    {formatRupiah(item.price)}
+                  </span>
+                </span>
                 <span>Rating {item.rating}</span>
               </div>
+              <p className={styles.discountInfo}>
+                Diskon {item.discountPercentage.toFixed(1)}%
+              </p>
               <button
                 type="button"
                 className={styles.selectButton}

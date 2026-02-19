@@ -117,6 +117,27 @@
   font-weight: 600;
 }
 
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceAfterDiscount {
+  color: #0ea5e9;
+}
+
+.priceOriginal {
+  color: var(--muted);
+  text-decoration: line-through;
+  font-size: 0.82rem;
+}
+
+.discountInfo {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .selectButton {
   margin-top: 0.75rem;
   width: 100%;
