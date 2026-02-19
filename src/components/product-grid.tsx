@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./product-grid.module.css";
 
 type Product = {
@@ -38,10 +38,62 @@ const formatLabelKategori = (value: string) => {
     .join(" ");
 };
 
+const RULES_TERJEMAHAN: Array<[RegExp, string]> = [
+  [/\bwith\b/gi, "dengan"],
+  [/\band\b/gi, "dan"],
+  [/\bfor\b/gi, "untuk"],
+  [/\bfrom\b/gi, "dari"],
+  [/\bthe\b/gi, ""],
+  [/\ba\b/gi, "sebuah"],
+  [/\bhigh-quality\b/gi, "berkualitas tinggi"],
+  [/\bpremium\b/gi, "premium"],
+  [/\blightweight\b/gi, "ringan"],
+  [/\bdurable\b/gi, "tahan lama"],
+  [/\bcomfortable\b/gi, "nyaman"],
+  [/\bwireless\b/gi, "nirkabel"],
+  [/\bsmartphone\b/gi, "ponsel pintar"],
+  [/\blaptop\b/gi, "laptop"],
+  [/\bheadphones\b/gi, "headphone"],
+  [/\bshoes\b/gi, "sepatu"],
+  [/\bwatch\b/gi, "jam tangan"],
+  [/\bfragrance\b/gi, "parfum"],
+  [/\bmoisturizing\b/gi, "melembapkan"],
+  [/\bskin\b/gi, "kulit"],
+  [/\bhair\b/gi, "rambut"],
+  [/\bcare\b/gi, "perawatan"],
+  [/\bproduct\b/gi, "produk"],
+];
+
+const terjemahkanDeskripsi = (text: string) => {
+  let hasil = text;
+
+  for (const [pattern, replacement] of RULES_TERJEMAHAN) {
+    hasil = hasil.replace(pattern, replacement);
+  }
+
+  return hasil
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s([.,!?])/g, "$1")
+    .trim();
+};
+
 export default function ProductGrid({ initialProducts }: ProductGridProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("semua");
   const [sortBy, setSortBy] = useState("bawaan");
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return window.localStorage.getItem("theme-mode") === "dark";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute("data-theme", isDarkMode ? "dark" : "light");
+    window.localStorage.setItem("theme-mode", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
 
   const categories = useMemo(() => {
     const unique = new Set(initialProducts.map((item) => item.category));
@@ -51,10 +103,16 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
   const displayedProducts = useMemo(() => {
     const lowerSearch = search.toLowerCase();
 
-    let result = initialProducts.filter((item) => {
+    let result = initialProducts
+      .map((item) => ({
+        ...item,
+        translatedDescription: terjemahkanDeskripsi(item.description),
+      }))
+      .filter((item) => {
       const matchesSearch =
         item.title.toLowerCase().includes(lowerSearch) ||
-        item.description.toLowerCase().includes(lowerSearch);
+        item.description.toLowerCase().includes(lowerSearch) ||
+        item.translatedDescription.toLowerCase().includes(lowerSearch);
       const matchesCategory = category === "semua" || item.category === category;
       return matchesSearch && matchesCategory;
     });
@@ -76,6 +134,16 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
 
   return (
     <section className={styles.wrapper}>
+      <div className={styles.toolbar}>
+        <button
+          type="button"
+          className={styles.themeButton}
+          onClick={() => setIsDarkMode((prev) => !prev)}
+        >
+          {isDarkMode ? "Mode Terang" : "Mode Gelap"}
+        </button>
+      </div>
+
       <div className={styles.controls}>
         <input
           className={styles.input}
@@ -124,7 +192,7 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
             />
             <div className={styles.cardBody}>
               <h2>{item.title}</h2>
-              <p>{item.description}</p>
+              <p>{item.translatedDescription}</p>
               <div className={styles.meta}>
                 <span>{formatRupiah(item.price)}</span>
                 <span>Rating {item.rating}</span>

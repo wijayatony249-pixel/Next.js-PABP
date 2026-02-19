@@ -2,6 +2,23 @@
   margin-top: 1.5rem;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.9rem;
+}
+
+.themeButton {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: 10px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .controls {
   display: grid;
   gap: 0.75rem;
@@ -11,16 +28,17 @@
 .input,
 .select {
   width: 100%;
-  border: 1px solid #d8dde6;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.75rem 0.9rem;
   font-size: 0.95rem;
-  background-color: #ffffff;
+  color: var(--foreground);
+  background-color: var(--surface);
 }
 
 .counter {
   margin: 0.9rem 0 1rem;
-  color: #5e6470;
+  color: var(--muted);
   font-size: 0.92rem;
 }
 
@@ -31,10 +49,10 @@
 }
 
 .card {
-  border: 1px solid #e6eaf2;
+  border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
-  background-color: #ffffff;
+  background-color: var(--surface);
 }
 
 .thumb {
@@ -54,7 +72,7 @@
 }
 
 .cardBody p {
-  color: #61697a;
+  color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.4;
   min-height: 2.5rem;

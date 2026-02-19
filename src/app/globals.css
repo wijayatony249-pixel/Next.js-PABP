@@ -1,6 +1,17 @@
 :root {
   --background: #f6f8fc;
   --foreground: #101828;
+  --surface: #ffffff;
+  --border: #d8dde6;
+  --muted: #5e6470;
+}
+
+:root[data-theme="dark"] {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --surface: #111827;
+  --border: #334155;
+  --muted: #94a3b8;
 }
 
 html,
@@ -41,5 +52,5 @@ a {
 
 .subtitle {
   margin-top: 0.5rem;
-  color: #5e6470;
+  color: var(--muted);
 }
