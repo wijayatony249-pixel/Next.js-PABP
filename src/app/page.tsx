@@ -1,4 +1,5 @@
 import ProductGrid from "@/components/product-grid";
+import StoreHeader from "@/components/store-header";
 
 type Product = {
   id: number;
@@ -34,7 +35,8 @@ export default async function Home() {
 
   return (
     <main className="container">
-      <h1 className="title">Katalog Produk DummyJSON (SSG + useState)</h1>
+      <StoreHeader />
+      <h2 className="title">Katalog Produk (SSG + useState)</h2>
       <p className="subtitle">
         Data dibangun secara generasi situs statis lalu diolah dinamis di
         peramban.

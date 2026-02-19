@@ -48,6 +48,7 @@ a {
 .title {
   font-size: clamp(1.5rem, 2vw, 2rem);
   line-height: 1.2;
+  margin-top: 1.25rem;
 }
 
 .subtitle {
