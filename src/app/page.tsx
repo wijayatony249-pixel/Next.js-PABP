@@ -1,3 +1,4 @@
+import LivePromo from "@/components/live-promo";
 import ProductGrid from "@/components/product-grid";
 import StoreHeader from "@/components/store-header";
 
@@ -42,6 +43,7 @@ export default async function Home() {
         peramban.
       </p>
       <ProductGrid initialProducts={products} />
+      <LivePromo />
     </main>
   );
 }

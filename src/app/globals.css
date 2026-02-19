@@ -56,6 +56,52 @@ a {
   color: var(--muted);
 }
 
+.livePromo {
+  margin-top: 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 1rem;
+}
+
+.livePromo h3 {
+  font-size: 1.1rem;
+}
+
+.livePromoNote {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.liveState {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.promoList {
+  margin-top: 0.9rem;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.promoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+}
+
+.liveStamp {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .alert {
   margin-top: 1.5rem;
   border: 1px solid #ef4444;

@@ -81,6 +81,9 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("semua");
   const [sortBy, setSortBy] = useState("bawaan");
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window === "undefined") {
       return false;
@@ -132,6 +135,46 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
     return result;
   }, [category, initialProducts, search, sortBy]);
 
+  const selectedProducts = useMemo(
+    () => initialProducts.filter((item) => selectedIds.includes(item.id)),
+    [initialProducts, selectedIds],
+  );
+
+  const totalBelanja = useMemo(
+    () => selectedProducts.reduce((sum, item) => sum + item.price, 0),
+    [selectedProducts],
+  );
+
+  const togglePilihProduk = (productId: number) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter((id) => id !== productId);
+      }
+
+      return [...prev, productId];
+    });
+    setPaymentMessage("");
+  };
+
+  const prosesPembayaran = async () => {
+    if (selectedProducts.length === 0 || isPaying) {
+      return;
+    }
+
+    setIsPaying(true);
+    setPaymentMessage("");
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+
+    setIsPaying(false);
+    setPaymentMessage(
+      `Pembayaran berhasil untuk ${selectedProducts.length} item. Terima kasih sudah belanja di Tony's Mart.`,
+    );
+    setSelectedIds([]);
+  };
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.toolbar}>
@@ -180,6 +223,26 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
         Menampilkan {displayedProducts.length} dari {initialProducts.length} produk
       </p>
 
+      <section className={styles.checkoutBox}>
+        <p>
+          Item dipilih: <strong>{selectedProducts.length}</strong>
+        </p>
+        <p>
+          Total: <strong>{formatRupiah(totalBelanja)}</strong>
+        </p>
+        <button
+          type="button"
+          className={styles.payButton}
+          onClick={prosesPembayaran}
+          disabled={selectedProducts.length === 0 || isPaying}
+        >
+          {isPaying ? "Sedang memproses pembayaran..." : "Bayar Sekarang"}
+        </button>
+        {paymentMessage ? (
+          <p className={styles.paymentMessage}>{paymentMessage}</p>
+        ) : null}
+      </section>
+
       <div className={styles.grid}>
         {displayedProducts.map((item) => (
           <article key={item.id} className={styles.card}>
@@ -197,6 +260,13 @@ export default function ProductGrid({ initialProducts }: ProductGridProps) {
                 <span>{formatRupiah(item.price)}</span>
                 <span>Rating {item.rating}</span>
               </div>
+              <button
+                type="button"
+                className={styles.selectButton}
+                onClick={() => togglePilihProduk(item.id)}
+              >
+                {selectedIds.includes(item.id) ? "Batalkan Pilihan" : "Pilih Item"}
+              </button>
             </div>
           </article>
         ))}
