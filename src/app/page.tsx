@@ -36,8 +36,8 @@ export default async function Home() {
     <main className="container">
       <h1 className="title">Katalog Produk DummyJSON (SSG + useState)</h1>
       <p className="subtitle">
-        Data dibangun secara static site generation lalu diolah dinamis di
-        browser.
+        Data dibangun secara generasi situs statis lalu diolah dinamis di
+        peramban.
       </p>
       <ProductGrid initialProducts={products} />
     </main>
